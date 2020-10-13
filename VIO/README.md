@@ -1,2 +1,2 @@
-# Campus-ON-Demand
+# Virtual infrastructure orchestrator
 Campus ON Demand
