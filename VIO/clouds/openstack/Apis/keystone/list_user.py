@@ -1,5 +1,5 @@
 import openstack
-from openstack .config import loader
+from openstack.config import loader
 import sys
 
 openstack.enable_logging(True, stream=sys.stdout)
