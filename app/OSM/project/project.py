@@ -25,7 +25,35 @@ def list_projects(username, password, project_id, token):
             return '{}\n {}'.format(response.text, token)
         
         return response
-    
+
+def create_project(username, password, project_id, token, name, admin):
+        payload = {
+            'name': name,
+            'admin': admin
+        }
+        
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            "Authorization": 'Bearer ' + token
+        }        
+        response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+              
+        if response.status_code == 401:            
+            data = tokens.create_token(username, password, project_id)
+            token = data.split()[2].strip()
+
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Authorization": 'Bearer ' + token
+            }
+            response = requests.request("POST", url, headers=headers, json = payload, verify=False)
+       
+            return '{}\n {}'.format(response.text, token)
+        
+        return response
+
 def list_projects_id():
     pass
 
