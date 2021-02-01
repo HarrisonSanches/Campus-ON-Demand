@@ -1,4 +1,3 @@
-from requests.models import Response
 import requests
 from OSM.project import project
 from OSM.tokens import tokens
@@ -21,8 +20,6 @@ def projects():
         resp = project.list_projects(username,password, project_id, token)
         return resp
     elif request.method == 'POST':
-        print("PROJECT NAME---------->>>>", name)
-
         resp = project.create_project(username, password, project_id, token, name, admin)
         return resp
 
