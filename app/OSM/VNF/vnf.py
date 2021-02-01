@@ -14,13 +14,12 @@ def create_vnf(obj):
 
     print(response.text.encode('utf8'))
     print(response.status_code)
-    
-    
 
 
 
 
-
+# Verificar possibilidade de usuarios com uma unica vim
+#usar django (experimentar) 
 
 
 # -----------------------EXEMLO DE VFN-----------------------------#
