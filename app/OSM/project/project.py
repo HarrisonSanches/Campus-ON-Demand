@@ -1,6 +1,6 @@
 import requests
 from OSM.tokens import tokens
-url = "https://192.168.0.125:9999/osm/admin/v1/projects"
+from app.urls import *
 
 def list_projects(username, password, project_id, token):
         payload = {}
@@ -9,7 +9,7 @@ def list_projects(username, password, project_id, token):
             'Accept': 'application/json',
             "Authorization": 'Bearer ' + token
         }        
-        response = requests.request("GET", url, headers=headers, data = payload, verify=False)
+        response = requests.request("GET", url_projects, headers=headers, data = payload, verify=False)
 
         if response.status_code == 401:            
             data = tokens.create_token(username, password, project_id)
@@ -20,7 +20,7 @@ def list_projects(username, password, project_id, token):
                 'Accept': 'application/json',
                 "Authorization": 'Bearer ' + token
             }
-            response = requests.request("GET", url, headers=headers, data = payload, verify=False)
+            response = requests.request("GET", url_projects, headers=headers, data = payload, verify=False)
        
             return '{}\n {}'.format(response.text, token)
         
@@ -37,7 +37,7 @@ def create_project(username, password, project_id, token, name, admin):
             'Accept': 'application/json',
             "Authorization": 'Bearer ' + token
         }        
-        response = requests.request("POST", url, headers=headers, data = payload, verify=False)
+        response = requests.request("POST", url_projects, headers=headers, data = payload, verify=False)
               
         if response.status_code == 401:            
             data = tokens.create_token(username, password, project_id)
@@ -48,7 +48,7 @@ def create_project(username, password, project_id, token, name, admin):
                 'Accept': 'application/json',
                 "Authorization": 'Bearer ' + token
             }
-            response = requests.request("POST", url, headers=headers, json = payload, verify=False)
+            response = requests.request("POST", url_projects, headers=headers, json = payload, verify=False)
        
             return '{}\n {}'.format(response.text, token)
         

@@ -21,3 +21,32 @@ image_attrs = {
 
 image = conn.image.create_image(**image_attrs)
 conn.image.import_image(image, method="web-download", uri=uri)
+
+
+
+
+EXAMPLE_IMAGE_NAME = "example_image"
+
+print("List Images:")
+for image in conn.image.images():
+    print(image.name)
+
+print("Delete Image:")
+example_image = conn.image.find_image(EXAMPLE_IMAGE_NAME)
+conn.image.delete_image(example_image, ignore_missing=False)
+
+
+
+# del image 
+
+
+
+EXAMPLE_IMAGE_NAME = "example_image"
+
+print("List Images:")
+for image in conn.image.images():
+    print(image.name)
+
+print("Delete Image:")
+example_image = conn.image.find_image(EXAMPLE_IMAGE_NAME)
+conn.image.delete_image(example_image, ignore_missing=False)
