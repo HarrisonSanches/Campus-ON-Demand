@@ -14,6 +14,7 @@ import secrets
 from openstack import exceptions 
 # cnx = create_connection_db('orchestrator_database', 'root', 'root', '127.0.0.1', 3306)
 
+from openstack.identity.v3._proxy import *
 
 token = secrets.token_hex(15)
 print(str(token))
@@ -21,7 +22,11 @@ print(str(token))
 connection_openstack = create_connection_openstack("http://192.168.1.108/identity", 'RegionOne', 'test',
                                                 'test','test123','default','default')
 
-# a = connection_openstack.delete_security_group('test4')
+
+a = connection_openstack.get_project("test")
+print(a.name)
+
+
 
 # try:
 # a = connection_openstack.create_user(name="username", password="password", domain_id='default')

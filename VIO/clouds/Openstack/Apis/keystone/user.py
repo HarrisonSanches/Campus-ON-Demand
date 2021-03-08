@@ -7,7 +7,7 @@ def create_user_in_openstack(username, password, conn):
     return user
 
 
-# list user
-def list_user(conn):
-    user = conn.identity.users()
+# get user
+def get_user(username, conn):
+    user = conn.get_user(username)
     return user

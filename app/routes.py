@@ -1,10 +1,11 @@
+from app.OSM.project.project_OSM import create_project_OSM
 from logging import info
 import openstack
 from typing import MappingView
 from VIO.clouds.Openstack.connection.connection import create_connection_openstack
 import requests
-from OSM.project import project
-from OSM.tokens import tokens
+from app.OSM.project import * 
+from app.OSM.tokens import tokens
 from flask import Flask, request, jsonify, json
 from VIO.clouds.Openstack import connection
 from VIO.clouds.Openstack.Apis import keystone
@@ -52,16 +53,21 @@ def users():
     username = info_user['username']
     password = info_user['password']
     name = info_user['name']
+    service = info_user['service']
     connection_openstack = create_connection_openstack("http://192.168.1.108/identity", 
                                                        'RegionOne', 'admin', 'admin','stack',
                                                        'default','default')
     
     if request.method == "POST":
-        connection_openstack.identity.create_user()
-
+        user = create_user_in_openstack(username,password,connection_openstack)
+        id_user = user.id
+        User.insert(iduser =id_user, name = name, username = username, password = password,
+                    creation_date ='2021-01-01')
         
-
-
+        # procurar serviço no banco posteriormente
+        connection_openstack.add_user_to_group(username, service)          
+        return user
+    
       
 @app.route('/projects/', methods=['POST','GET', 'DELETE'])
 def projects():
@@ -74,39 +80,27 @@ def projects():
     admin = info_user['admin']
     project_name = info_user['project_name']
     service = info_user['service']
-    
-    if request.method == 'GET':
-        resp = project.list_projects(username,password, project_id, token)
-        return resp
-    elif request.method == 'POST':
-        connection_openstack = create_connection_openstack("http://192.168.1.108/identity", 'RegionOne', 'admin', 'admin','stack','default','default')
-        
-        for user in connection_openstack.user():
-            # verificar se é username ou username
-            # Verificando se o usuário já existe no Openstack
-            if user.name == username:
-                exist = False
-                for projects in connection_openstack.projects():
-                    if projects == project_name:
-                        exist == True
-                if exist:
-                    return ("já existe esse projeto para esse usuário")
-                else:
-                    create_project(username,project_name,"SHJNISOJDIOPASJDIOAS", connection_openstack)                              
-                    resp = project.create_project(username, password, project_id, token, name, admin)
-                    return resp
-        # Caso não exista, eu crio o usuário no openstack e em seguida crio projeto no OSM
-        
-        # MUDAR O ARQUIVO CREATE USER NO VIO URGENTE
-        # MUDAR PARA PROCURAR O SERVICEO NO BANCO, SEM QUE SEJA NECESSÁRIO ENVIAR UMA REQUISIÇÃO PRA ISSO
-        # UTILIZAR O TOKEN PARA ESSA CONSULTA
-        connection_openstack.identity.create_user(name=name, password=password)
-        create_project(username,project_name,"SHJNISOJDIOPASJDIOAS", connection_openstack)                              
-        connection_openstack.add_user_to_group(username, service)
+    connection_openstack = create_connection_openstack("http://192.168.1.108/identity", 
+                                                       'RegionOne', 'admin', 'admin',
+                                                       'stack','default','default')
 
-        resp = project.create_project(username, password, project_id, token, name, admin)
-        connection_openstack.close()
-        return resp
+    if request.method == 'GET':
+        # GET TEM QUE SER N O USUARIO OPENSTACK, O OSM VAI MOSTRAR TODOS OS PROJETOS
+        pass
+    
+    elif request.method == 'POST':     
+        exist = False
+        for projects in connection_openstack.projects():
+            if projects == project_name:
+                exist = True
+        if exist:
+            return ("já existe esse projeto para esse usuário")
+        else:
+            create_project(username,project_name,"SHJNISOJDIOPASJDIOAS", connection_openstack)
+            connection_openstack.close()
+            # USER ADMIN DO OSM PRA FAZER ESSA REQ -- USAR TOKEN DO OSM                          
+            resp = create_project_OSM(username, password, project_id, token, name, admin)
+            return resp
 
 @app.route('/VNF/', methods=['POST','GET', 'DELETE'])
 def VNF():

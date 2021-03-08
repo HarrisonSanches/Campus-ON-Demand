@@ -26,7 +26,7 @@ def list_projects(username, password, project_id, token):
         
         return response
 
-def create_project(username, password, project_id, token, name, admin):
+def create_project_OSM(username, password, project_id, token, name, admin):
         payload = {
             'name': name,
             'admin': admin
