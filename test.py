@@ -7,28 +7,110 @@ from openstack.config import loader
 import sys
 from openstack import connection
 import mysql.connector
-from database.connection_db import create_connection_db
-from database.models import *
-from VIO.clouds.Openstack.connection.connection import create_connection_openstack
+# from database.connection_db import create_connection_db
+# from database.models import *
+# from VIO.clouds.Openstack.connection.connection import create_connection_openstack
 import secrets
 from openstack import exceptions 
 # cnx = create_connection_db('orchestrator_database', 'root', 'root', '127.0.0.1', 3306)
 
 from openstack.identity.v3._proxy import *
+import yaml
+import json
+from app.VIO.clouds.Openstack.connection.connection import * 
 
-token = secrets.token_hex(15)
-print(str(token))
+# headers = {
+#         'Accept':'application/json',
+#         'Content-Type':'application/json'
+#         }
 
-connection_openstack = create_connection_openstack("http://192.168.1.108/identity", 'RegionOne', 'test',
-                                                'test','test123','default','default')
+# json pra criar usuario
+# payload={'username': 'test1',
+#          'password': 'test123',
+#          'name': 'fulano',
+#          'service': 'Campus-On-Demand'
+#          }
+# 
+
+# json para criar projeto
+payload={'username': 'test1',
+        'project_name': 'projeto_test',
+        #daqui pra baixo eu que tenho essas informações, nao precisa mandar
+        'token': "kkkkkk"
+        #  token pro admin do osm
+        }
 
 
-a = connection_openstack.get_project("test")
-print(a.name)
+a = requests.request(method="POST", url='http://127.0.0.1:8000/projects/', json=payload)
+print(a.text)
+# url = 'https://192.168.0.115:9999/osm/admin/v1/projects'
+# token_osm = 'SxAZEuYlSkGoAIVJpljr7lRUuhodoDRx'
 
 
 
-# try:
+# payload={}
+# headers = {
+#     'Content-Type': ' application/json',
+#     'Accept': ' application/json',
+#     "Authorization": 'Bearer ' + token_osm
+# }
+
+# response = requests.request("GET", url, headers=headers, json=payload)
+
+# print(response.json())
+
+# payload={
+#     "username": "admin",
+#     "password": "admin",
+#     "project_id": "admin"
+#         #  token pro admin do osm
+#     }
+
+# headers = {
+#   'Content-Type': 'application/json'
+# }
+
+# response = requests.request("POST", url, headers=headers, json=payload, verify=False)
+# print(response.text)
+# token = secrets.token_hex(15)
+# # print(str(token))
+
+# connection_openstack = create_connection_openstack("http://192.168.1.108/identity", 'RegionOne', 'test',
+#                                                 'test','test123','default','default')
+
+# connection_openstack.list_projects()
+
+# a = connection_openstack.get_project("test")
+# print(a.name)
+
+# with open("/home/sanches/Downloads/yaml-validator.yaml", 'r') as yaml_in, open("example.json", "w") as json_out:
+#     yaml_object = yaml.safe_load(yaml_in) # yaml_object will be a list or a dict
+#     json.dump(yaml_object, json_out)
+
+# b = open('/home/sanches/projects/Campus-ON-Demand/example.json',)
+# c = json.load(b)
+
+# for item in c:
+#     item['prices'][0]['price'] = 200
+    
+# print(c)
+
+
+# sys.stdout.write(yaml.dump(json.load(b)))
+# print(b)
+# print('saída')
+# print()
+
+# a = open("/home/sanches/Downloads/yaml-validator.yaml",)
+
+# b = yaml.full_load(a)
+
+# b[0]['prices'][0]['price'] = 200
+# b[1]['prices'][0]['price'] = 550
+
+# sys.stdout.write(yaml.dump(b))
+       
+            # try:s
 # a = connection_openstack.create_user(name="username", password="password", domain_id='default')
 # except identity. as e:
 #     print("HUIASHSASAHDSA")

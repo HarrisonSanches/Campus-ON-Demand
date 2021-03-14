@@ -1,17 +1,17 @@
 import requests
-url = "https://192.168.0.125:9999/osm/admin/v1/tokens"
+url = "https://192.168.0.115:9999/osm/admin/v1/tokens"
 
-def create_token(username, password, project_id):
+def create_token(admin_name, password_admin, project_id_admin):
     headers = {
     'Content-Type': 'application/json'
     }
     payload = {
-        "username": username,
-	    "password": password,
-	    "project_id": project_id
+        "username": admin_name,
+	    "password": password_admin,
+	    "project_id": project_id_admin
     }
 
-    response = requests.request("POST", url, headers=headers, json = payload, verify=False)
+    response = requests.request(method="POST", url=url, headers=headers, json = payload, verify=False)
     print("RESPOSTA DO TOKEN: ", response.text)
     
     return response.text
